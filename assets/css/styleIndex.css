@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css?family=Overpass');
+
+*{
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body{
+  font-family: "Overpass";
+  height: 100vh !important;
+  width: 100vw !important;
+  background-image:url('../img/background_moy.jpg') !important;
+  background-repeat: no-repeat !important;
+  background-size: cover;
+  overflow: hidden;
+}
+
+header{
+  border-bottom: solid #993399 1px;
+  height: 12vh;
+  font: "Overpass" !important;
+  background-color: #fff !important;
+}
+
+#logo img{
+  width: 15vw;
+  padding-top: 0.5% !important;
+}
+
+#logo figcaption{
+  color : #333333;
+  font-size: 1em;
+  font-weight: 400;
+  padding-top: 2% !important;
+  text-align: justify;
+  padding-left: 3% !important;
+}
+
+#homepage{
+  height: 45vh !important;
+}
+
+
+#block-search{
+  margin-top: 17% !important;
+  opacity: 0.8 !important;
+  margin-left: 17% !important;
+}
+
+#search{
+  padding-top: 5% !important;
+
+}
+
+
+#search input:focus {
+  border-bottom: 1px solid #993399 !important;
+  box-shadow: 0 1px 0 0 #993399 !important;
+  background-color: #fff !important;
+}
+
+#search input[type=text].valid{
+  -webkit-box-shadow: 0 1px 0 0 red !important;
+  -moz-box-shadow: 0 1px 0 0 red !important;
+  box-shadow: 0 1px 0 0 red !important;
+  border-bottom: 1px solid #888 !important;
+  background-color: #fff !important;
+}
+
+#or{
+  font-size : 5em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #993399;
+  padding-left: 5% !important;
+  margin-top: -2% !important;
+}
+
+#myPosition{
+  font-size: 1em !important;
+  color: #fff;
+  text-transform: uppercase;
+  margin-top: 3% !important;
+}
+footer{
+  height: 12vh !important;
+  padding-top: 1% !important;
+  background-color: #fff !important;
+}
+
+#logofb, #logotwitter{
+  width: 4vw;
+  padding-left: 5% !important;
+}
+#link a{
+  color : #993399;
+  text-transform: none;
+  font-size: 1.5em;
+  padding-left: 8% !important;
+  margin-top: 3% !important;
+  font-weight: bold;
+  float: right;
+}
+
+input[placeholder] {
+  color: black !important;
+  opacity: 1 !important;
+}
