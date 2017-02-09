@@ -18,7 +18,7 @@ $template = file_get_contents("include/template/index.html");
 $e = new establishment();
 
 //recieve the entire list of establishment in our database
-$d["eList"] = $e->find();
+$d["eList"] = $e->listCities();
 
 
 //start the mustache engine

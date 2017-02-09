@@ -2,6 +2,9 @@
 // load classes and libraries
 require_once "libs.php";
 
+
+/* reprendre le fichier de HOUDA avec les cookies*/
+
 //on crée un cookie pour enregistrer les différentes valeurs récupérées deuis de formulaire de l'index
 setcookie("sessionFilter[city]", "" , time() + 120, URL_SITE."/include/getResults.php");
 setcookie("sessionFilter[est]",  "", time() + 120, URL_SITE."/include/getResults.php");
