@@ -2,7 +2,6 @@
 // load classes and libraries
 require_once "libs.php";
 
-
 function addCookie($keyRequest, $keyCookie, $time = 240000){
 	if(isset($_REQUEST[$keyRequest])){
 		$val = "".$_REQUEST[$keyRequest]."";
@@ -14,6 +13,7 @@ function addCookie($keyRequest, $keyCookie, $time = 240000){
 		return $val;
 	}
 }
+
 // create cookies with searching information
 $myCity = addCookie("city", "city");
 $name = addCookie("etablissements", "name");

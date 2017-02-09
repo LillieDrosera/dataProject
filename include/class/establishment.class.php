@@ -1,5 +1,4 @@
 <?php
-// require_once "../libs.php";
 
 class establishment extends SQLpdo{
 
@@ -7,28 +6,40 @@ class establishment extends SQLpdo{
 	private $sql;
 
 	function __construct($name = null){
+
 		$this->sql = new SQLpdo();
 
 		if (!empty($name)){
-			// $this->d = $this->sql->fetch("SELECT * FROM `EST_Access2` WHERE id=:id", array(':id' => $id));
-
 			$this->d = $this->sql->fetch("SELECT * FROM `EST_Access2` WHERE `Name_Est`=:name", array(':name' => $name));
 		}
 	}
 
-	 // @param $limit integer Limite le nombre de résultat
- function find($limit=null){
+	function find($limit=null){
+	/*renvoie TOUS les établissements*/
+	// @param $limit integer Limite le nombre de résultat
 
- /*renvoie TOUS les établissements*/
-  $sql = "SELECT * FROM `EST_Access2`";
+	  	$sql = "SELECT * FROM `EST_Access2`";
 
-        if(!empty($limit)) {
-            $sql .= ' LIMIT '.$limit;
-        }
+		if(!empty($limit)) {
+			$sql .= ' LIMIT '.$limit;
+		}
 
-        $this->d = $this->sql->fetchAll($sql);
-  return $this->d ;
- }
+		$this->d = $this->sql->fetchAll($sql);
+		
+	  	return $this->d ;
+	 }
+
+	function listCities($limit=null){
+	/*renvoie TOUTES les villes*/
+
+	  	$sql = "SELECT `City` FROM `EST_Access2` GROUP BY `City`";
+
+		if(!empty($limit)) {
+			$sql .= ' LIMIT '.$limit;
+		}
+
+		$this->d = $this->sql->fetchAll($sql);
+  }
 
 /*renvoie les établissements correspondant à une ville précise */
 function findByCity($city, $filter = null){
@@ -73,15 +84,19 @@ function findByCity($city, $filter = null){
 
 	return $this->d ;
 }
-
 	function findByCoord($Longitude, $Latitude){
 	/*renvoie les établissements correspondant à une position GPS*/
+
 		$perimeter = 0.15;
+
 		$this->d = $this->sql->fetchAll("SELECT * FROM `EST_Access2` WHERE ( `Longitude` BETWEEN (:longitudeMin) AND (:longitudeMax)) AND  ( `Latitude` BETWEEN (:latitudeMin) AND (:latitudeMax)) ", array(':longitudeMin' => $Longitude-$perimeter, ':longitudeMax' => $Longitude+$perimeter, ':latitudeMin' => $Latitude-$perimeter, ':latitudeMax' => $Latitude+$perimeter));
+
 		return $this->d ;
+
 	}
 
-/*--- recupération d'info dans la BD ---*/
+	/*--- recupération d'info dans la BD ---*/
+
 	function getName(){
 	/*renvoie le nom de l'établissement*/
 		return $this->d['Name_Est'];
@@ -132,27 +147,27 @@ function findByCity($city, $filter = null){
 
 	function getActivity(){
 	 /*renvoie le type d'activité de l'établissement*/
-	    return $this->d['Activity'];
+		return $this->d['Activity'];
 	 }
 
-	 function findAccessSurdity(){
-	 /*renvoie true si l'établissement est accessible aux malentendants, false sinon*/
-	    return $this->d['H_Auditory'];
+	function findAccessSurdity(){
+	/*renvoie true si l'établissement est accessible aux malentendants, false sinon*/
+		return $this->d['H_Auditory'];
 	}
 
-	 function findAccessBlind(){
-	 /*renvoie true si l'établissement est accessible aux malvoyants, false sinon*/
-	    return $this->d['H_Visual'];
+	function findAccessBlind(){
+	/*renvoie true si l'établissement est accessible aux malvoyants, false sinon*/
+		return $this->d['H_Visual'];
 	}
 
-	 function findAccessMobility(){
-	 /*renvoie true si l'établissement est accessible aux PMR, false sinon*/
-	    return $this->d['H_Mobility'];
+	function findAccessMobility(){
+	/*renvoie true si l'établissement est accessible aux PMR, false sinon*/
+		return $this->d['H_Mobility'];
 	}
 
-	 function findAccessMental(){
-	 /*renvoie true si l'établissement est accessible aux ..., false sinon*/
-	    return $this->d['H_Mental'];
+	function findAccessMental(){
+	/*renvoie true si l'établissement est accessible aux ..., false sinon*/
+		return $this->d['H_Mental'];
 	}
 
 }
