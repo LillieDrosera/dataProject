@@ -30,47 +30,50 @@ class establishment extends SQLpdo{
   return $this->d ;
  }
 
+/*
+	function find(){
+	renvoie TOUS les établissements WHERE `Longitude` IS NOT NULL AND `Latitude` IS NOT NULL
+		$this->d = $this->sql->fetchAll("SELECT * FROM `EST_Access2`   ORDER BY `Name_Est`");
+		return $this->d ;
+	}
+*/
 /*renvoie les établissements correspondant à une ville précise */
 function findByCity($city, $filter = null){
-	$array = array(':city' => $city);
+	 $array = array(':city' => $city);
 	$__where_array = array(
-		'surdity' => 'H_Auditory',
 		'blind' => 'H_Visual',
-		'mental' => 'H_Mental',
-		'mobility' => 'H_Mobility');
+		'surdity' => 'H_Auditory',
+		'mobility' => 'H_Mobility',
+		'mental' => 'H_Mental');
 
-	$req = "";
-
-	if(is_array($filter)){
-
-		$req = " AND ";
-		static $i = 0;
-		foreach($filter as $key => $val){
-
-			if($key != "city" && $key != "etablissements" && $key != "longitude" && $key != "latitude"){
-
-				if($i == 0){
-					$req .= "(";
-				}
-				if($i > 0){
-					$req .= " OR ";
-				}
-				 $req .= " ".$__where_array[$val]." = 1";
-				$i ++;
-			}
-		}
-
-		if($i > 0){
-			$req .= ")";
-		}
-		else{
-			$req .= "(".implode(" = 1 OR ", $__where_array)." = 1)";
-		}
-	}
-
-	/*renvoie les établissements correspondant à une ville précise */
-	$this->d = $this->sql->fetchAll("SELECT * FROM `EST_Access2` WHERE City=:city AND `Longitude` IS NOT NULL AND `Latitude` IS NOT NULL ".$req." ORDER BY `City` ", $array);
-
+	// $req = " AND ";
+	//
+	// if(!is_null($filter) && is_array($filter)){
+	// 	foreach($filter as $key => $val){
+	// 		static $i = 0;
+	// 		if($key != "city"){
+	// 		//if($__where_array[$val]){ //si jamais la ligne du dessous ne marche pas, tente celle-là
+	// 		//if(in_array($val, $__where_array)){ //je ne sias pas si cette ligne marche
+	// 			if($i == 0){
+	// 				$req .= "(";
+	// 			}
+	// 			if($i > 0){
+	// 				$req .= " OR ";
+	// 			}
+	// 			$req .= " ".$__where_array[$val]." = :".$val;
+	// 			$array  = array_merge($array, array(':'.$val => 1));
+	//
+	// 			$i ++;
+	// 		}
+	// 	}
+	//
+	// 	if($i > 0){
+	// 		$req .= ")";
+	// 	}
+	// }
+/*renvoie les établissements correspondant à une ville précise */
+//$this->d = $this->sql->fetchAll("SELECT * FROM `EST_Access2` WHERE city=:city AND `Longitude` IS NOT NULL AND `Latitude` IS NOT NULL ".$req." ORDER BY `City` ", $array);
+	$this->d = $this->sql->fetchAll("SELECT * FROM `EST_Access2` WHERE city=:city AND `Longitude` IS NOT NULL AND `Latitude` IS NOT NULL  ORDER BY `City` ", $array);
 	return $this->d ;
 }
 

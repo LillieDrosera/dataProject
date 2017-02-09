@@ -2,61 +2,44 @@
 // load classes and libraries
 require_once "libs.php";
 
-//on crée un cookie pour enregistrer les différentes valeurs récupérées deuis de formulaire de l'index
-setcookie("sessionFilter[city]", "" , time() + 120, URL_SITE."/include/getResults.php");
-setcookie("sessionFilter[est]",  "", time() + 120, URL_SITE."/include/getResults.php");
-setcookie("sessionFilter[longitude]",  "", time() + 120, URL_SITE."/include/getResults.php");
-setcookie("sessionFilter[latitude]",  "", time() + 120, URL_SITE."/include/getResults.php");
 
-if($_SERVER['REQUEST_METHOD'] == 'GET'){
-	if(!empty($_REQUEST['city']))
-	{
-		//priorité choix de la ville
-		$myCity = $_REQUEST['city'];
-		// on enregistre la ville choisie
-		$_COOKIE['sessionFilter[city']=$myCity ;
-	}
-	elseif(!empty($_REQUEST['etablissements']))
-	{
-		$name = "{$_REQUEST['etablissements']}";
-		// on enregistre l'id de l'établissement choisi
-		$_COOKIE['sessionFilter[est']=$name ;
-	}
-	else
-	{ //si aucune ville ou aucun établissement choisis, on prend la géolocalisation
-
-		$Longitude = $_REQUEST['longitude'];
-		$Latitude = $_REQUEST['latitude'];
-		// on enregistre les valeurs de longitude et latitude si elles existent
-
-		$_COOKIE['sessionFilter[longitude]']=$Longitude ;
-		$_COOKIE['sessionFilter[latitude]']=$Latitude ;
-	}
-}
-
-if($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-	// create cookies for filter by type of handicap and for only city's searching
-	if(isset($_COOKIE['sessionFilter'])) // ce cookie est créé à la ligne 15
-	{
-
-		$Hauditory = "{$_POST['surdity']}";
-		setcookie("sessionFilter[auditoryFilter]", $Hauditory, time() + 120, URL_SITE."/include/getResults.php");
-
-		$Hvisual = "{$_POST['blind']}";
-		setcookie("sessionFilter[visualFilter]", $Hvisual, time() + 120, URL_SITE."/include/getResults.php");
-
-		$Hmental = "{$_POST['mental']}";
-		setcookie("sessionFilter[mentalFilter]", $Hmental, time() + 120, URL_SITE."/include/getResults.php");
-
-		$Hmobility = "{$_POST['mobility']}";
-		setcookie("sessionFilter[mobilityFilter]", $Hmobility, time() + 120, URL_SITE."/include/getResults.php");
-
+function addCookie($keyRequest, $keyCookie, $time = 240000){
+	if(isset($_REQUEST[$keyRequest])){
+		$val = "".$_REQUEST[$keyRequest]."";
+		setcookie("sessionFilter[".$keyCookie."]", $val, time() + $time, URL_SITE."/include/");
+		return $val;
 	}
 	else{
-		exit;
+		(isset($_COOKIE["sessionFilter"]["".$keyCookie.""])) ? $val = $_COOKIE["sessionFilter"]["".$keyCookie.""] : $val = null;
+		return $val;
 	}
+}
+// create cookies with searching information
+$myCity = addCookie("city", "city");
+$name = addCookie("etablissements", "name");
+$longitude = addCookie("longitude", "longitude");
+$latitude = addCookie("latitude", "latitude");
 
+// delete cookies for types of handicap
+$filterH = array('surdity','blind','mental','mobility');
+foreach($filterH as $v) {
+	setcookie("sessionFilter[".$v."]", "", time() -3600, URL_SITE."/include/");
+}
+
+// create cookies with filter selected
+$filterNew = array();
+if(isset($_POST["Filter"])){
+	$filterH = array('surdity','blind','mental','mobility');
+	foreach($filterH as $v) {
+		if(isset($_POST[$v])){
+			$fil = "{$_POST[$v]}";
+			setcookie("sessionFilter[".$v."]", $fil, time() + 3600, URL_SITE."/include/");
+			$filterNew[$v] = $_POST[$v];
+		}
+	}
+}
+elseif(isset($_COOKIE['sessionFilter'])){
+	$filterNew = $_COOKIE["sessionFilter"];
 }
 
 /*
@@ -71,19 +54,13 @@ Mustache_Autoloader::register();
 $template = file_get_contents("template/resultats.html");
 
 //create a new object establishment
-	if (isset($_COOKIE['sessionFilter'])) {
-		$arrayFilter = $_COOKIE['sessionFilter'];
-	}
-	else {
-		$arrayFilter = [];
-	}
 
 if (!empty($myCity)) { //si on a choisi une ville
-	//print_r($arrayFilter);
 	$e = new establishment();
-	$d["item"] = $e->findByCity($myCity, $arrayFilter);
+	$d["item"] = $e->findByCity($myCity, $filterNew);
 	$d["LongitudeCarte"] = $e->d[0]['Longitude'];
 	$d["LatitudeCarte"] = $e->d[0]['Latitude'];
+	print_r($d);
 }
 
 elseif (!empty($name)){
@@ -94,15 +71,11 @@ elseif (!empty($name)){
 
 }
 
-elseif (!empty($Longitude)&&!empty($Latitude)) {
+elseif (!empty($longitude)&&!empty($latitude)) {
 	$e = new establishment();
-	$d["item"] = $e->findByCoord($Longitude, $Latitude);
-	$d["LongitudeCarte"] = $Longitude;
-	$d["LatitudeCarte"] = $Latitude;
-}
-else{
-	//echo "erreur choix nuls";
-	exit;
+	$d["item"] = $e->findByCoord($longitude, $latitude);
+	$d["LongitudeCarte"] = $longitude;
+	$d["LatitudeCarte"] = $latitude;
 }
 
 //start the mustache engine
